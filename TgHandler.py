@@ -1,0 +1,37 @@
+import json
+import requests
+from secret_info import address
+
+def getUpdates(offset:int):
+    resp = requests.get(address+"getUpdates",params={"offset":offset})
+    jsonObj = resp.json()
+
+    if(len(jsonObj["result"])):
+        offset=jsonObj["result"][-1]["update_id"]+1
+    return [jsonObj,offset]
+
+
+def sendText(id,text,keyboard=None):
+    reply_markup={"keyboard":keyboard,
+                      "resize_keyboard": True,        # optional: make buttons smaller
+                      "one_time_keyboard": True       # optional: keep keyboard after click
+                    }  
+    if(not text and (not keyboard is None)):
+        resp = requests.post(address+"sendMessage",params={"chat_id":id,
+                                                           "text":"ㅤ",
+                                                           "reply_markup":json.dumps(reply_markup)})
+    if(keyboard is None):
+        resp = requests.post(address+"sendMessage",params={"chat_id":id,
+                                                           "text":text})
+    else:          
+        resp = requests.post(address+"sendMessage",params={"chat_id":id,
+                                                           "text":text,
+                                                           "parse_mode":'HTML',
+                                                           "reply_markup":json.dumps(reply_markup)})
+
+def sendGPGMessage(id,text,keyboard=None):
+    print(keyboard)
+    if(keyboard is None):
+        resp = requests.post(address+"sendMessage",params={"chat_id":id,
+                                                           "text":"```\n"+text+"\n```",
+                                                           "parse_mode":'MarkdownV2'})
