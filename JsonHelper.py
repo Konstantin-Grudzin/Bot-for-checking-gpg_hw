@@ -7,6 +7,12 @@ from pathlib import Path
 path = Path(__file__)
 default_path = str(path.parent)+("/user/")
 
+def createFile(data,loc):
+    with open(loc,'w') as file:
+        txt = json.dumps(data,indent=4)
+        file.write(txt)
+
+
 def reWriteFile(data,file):
     txt = json.dumps(data,indent=4)
     file.truncate(0)
