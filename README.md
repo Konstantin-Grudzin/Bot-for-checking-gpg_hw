@@ -1,6 +1,6 @@
 # Telegram Bot for checking students' skills of using gpg
 
-Discklaimer: this bot was targeted for russian students/ If you wnat to use it in another languages, use translation (Maybe i add translation in future? We will see)
+Disclaimer: this bot was targeted for russian students/ If you wnat to use it in another languages, use translation (Maybe i add translation in future? We will see)
 
 This bot get some functions
 1. You can add gpg key and try to decrypt message that bit gives you
