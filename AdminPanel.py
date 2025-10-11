@@ -14,13 +14,13 @@ def notify():
     admins = dataJson["Admins"]
     stud = dataJson["Good Students"][-1]
 
-    all_sleep=True
+    all_sleep = True
     for [admin, allow] in admins.items():
         if not allow:
             continue
         all_sleep = False
         TgHandler.send_text(admin, f"{stud} pass the test,hooray!")
-    if(not all_sleep):
+    if not all_sleep:
         dataJson["Good Students"].pop()
 
 

@@ -3,7 +3,6 @@ from UserMaster.User import User
 from UserMaster.UserHelper import UserState, TgCommand
 
 
-
 def getUser(id, username):
     if JsonHelper.user_exist(id):
         return User(data=JsonHelper.get_user_json(id))
