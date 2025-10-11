@@ -2,3 +2,4 @@ python-gnupg
 requests
 black
 ruff
+Faker

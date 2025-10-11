@@ -1,12 +1,14 @@
 from pathlib import Path
 import gnupg
+from faker import Faker
 
+fake = Faker()
 gpg = gnupg.GPG()
 currLoc = str(Path(__file__).parent) + "/gpg_keys/"
 
 
 def gen_some_text():
-    return "PUPU"
+    return fake.name()
 
 
 def delete_gpg(id):
