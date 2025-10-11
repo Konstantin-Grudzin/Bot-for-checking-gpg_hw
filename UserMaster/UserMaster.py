@@ -1,41 +1,27 @@
-import json
-
-import requests
 import JsonHelper
 from UserMaster.User import User
-from secret_info import address
-from UserMaster.UserHelper import userState, tgCommand
+from UserMaster.UserHelper import UserState, TgCommand
 
-
-def sendMessage(user_inst: User):
-    requests.post(
-        address + "sendMessage",
-        params={
-            "chat_id": user_inst.id,
-            "text": user_inst.text,
-            "reply_markup": json.dumps(user_inst.keyboard),
-        },
-    )
 
 
 def getUser(id, username):
-    if JsonHelper.userExist(id):
-        return User(data=JsonHelper.getUserJson(id))
+    if JsonHelper.user_exist(id):
+        return User(data=JsonHelper.get_user_json(id))
     return createUser(id, username)
 
 
 def createUser(id, username):
     data = {
         "id": id,
-        "state": userState.BEGIN.value,
+        "state": UserState.BEGIN.value,
         "username": username,
         "result": False,
     }
-    JsonHelper.writeUserJson(id, data)
-    return User(data=JsonHelper.getUserJson(id))
+    JsonHelper.write_user_json(id, data)
+    return User(data=JsonHelper.get_user_json(id))
 
 
-def ProcessMessage(msg):
+def process_message(msg):
     # TODO: Hide msg parser in another module
     id = msg["from"]["id"]
     username = msg["from"]["first_name"]
@@ -45,7 +31,7 @@ def ProcessMessage(msg):
 
     # this needs to avoid handling start message from all states
     user = getUser(id, username)
-    if user.state != userState.BEGIN and message == tgCommand.START.value:
-        user.state = userState.BEGIN
+    if user.state != UserState.BEGIN and message == TgCommand.START.value:
+        user.state = UserState.BEGIN
 
-    user.changeState(user.stateHandler(message))
+    user.change_state(user.state_handler(message))

@@ -3,7 +3,7 @@ import requests
 from secret_info import address
 
 
-def getUpdates(offset: int):
+def get_updates(offset: int):
     resp = requests.get(address + "getUpdates", params={"offset": offset})
     jsonObj = resp.json()
 
@@ -12,7 +12,7 @@ def getUpdates(offset: int):
     return [jsonObj, offset]
 
 
-def sendText(id, text, keyboard=None):
+def send_text(id, text, keyboard=None):
     reply_markup = {
         "keyboard": keyboard,
         "resize_keyboard": True,  # optional: make buttons smaller
@@ -41,7 +41,7 @@ def sendText(id, text, keyboard=None):
         )
 
 
-def sendGPGMessage(id, text, keyboard=None):
+def send_gpg_message(id, text, keyboard=None):
     print(keyboard)
     if keyboard is None:
         requests.post(

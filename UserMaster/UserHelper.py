@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class userState(Enum):
+class UserState(Enum):
     BEGIN = 0
     ENTER_ADMIN = 12
     ADMIN = 18
@@ -10,7 +10,7 @@ class userState(Enum):
     WAIT_FOR_CORRECT_MESSAGE = 51
 
 
-class tgCommand(Enum):
+class TgCommand(Enum):
     START = "/start"
     CHANGE_NAME = "Изменить Имя"
     BEGIN_EXAM = "Начать зачёт"
@@ -21,28 +21,28 @@ class tgCommand(Enum):
 
 
 menuText = {
-    userState.BEGIN: "Добро пожаловать на начальную страницу: тут ты можешь:\n1.Сдать зачёт\n2.Изменить имя, под которым уведомление о зачёте будет отправлено преподавателю (Изначально берётся из имени в тг)\n3.Войти в админ-панель",
-    userState.ENTER_ADMIN: "Введи пасс-ключ для входа в админ панель",
-    userState.ADMIN: "",
-    userState.CHANGE_NAME: "Напиши новое ФИ и группу через пробел (Учти, его нельзя изменить после и во время получения зачёта!):\n",
-    userState.WAIT_FOR_GPG: "Жду твой gpg-ключ\nПодсказка: получить его можно с помощью этих комманд:\n<code>gpg --full-gen-key</code>\n<code>gpg --export -a bob@example.com > bob_public.gpg</code>",
-    userState.WAIT_FOR_CORRECT_MESSAGE: "Я зашифровал сообщение, скопируй его, расшифруй и отправь мне\nПодсказка:\nВоспользуйся командой\n<code>gpg -d -o message.txt 'имя файла с этим сообщением'</code>",
+    UserState.BEGIN: "Добро пожаловать на начальную страницу: тут ты можешь:\n1.Сдать зачёт\n2.Изменить имя, под которым уведомление о зачёте будет отправлено преподавателю (Изначально берётся из имени в тг)\n3.Войти в админ-панель",
+    UserState.ENTER_ADMIN: "Введи пасс-ключ для входа в админ панель",
+    UserState.ADMIN: "",
+    UserState.CHANGE_NAME: "Напиши новое ФИ и группу через пробел (Учти, его нельзя изменить после и во время получения зачёта!):\n",
+    UserState.WAIT_FOR_GPG: "Жду твой gpg-ключ\nПодсказка: получить его можно с помощью этих комманд:\n<code>gpg --full-gen-key</code>\n<code>gpg --export -a bob@example.com > bob_public.gpg</code>",
+    UserState.WAIT_FOR_CORRECT_MESSAGE: "Я зашифровал сообщение, скопируй его, расшифруй и отправь мне\nПодсказка:\nВоспользуйся командой\n<code>gpg -d -o message.txt 'имя файла с этим сообщением'</code>",
 }
 
 menuButtons = {
-    userState.BEGIN: [
-        [tgCommand.BEGIN_EXAM.value, tgCommand.CHANGE_NAME.value],
-        [tgCommand.BECOME_ADMIN.value],
+    UserState.BEGIN: [
+        [TgCommand.BEGIN_EXAM.value, TgCommand.CHANGE_NAME.value],
+        [TgCommand.BECOME_ADMIN.value],
     ],
-    userState.ENTER_ADMIN: [[tgCommand.EXIT.value]],
-    userState.ADMIN: [
-        [tgCommand.ADMIN_NOTIFY_ON.value],
-        [tgCommand.ADMIN_NOTIFY_OFF.value],
-        [tgCommand.EXIT.value],
+    UserState.ENTER_ADMIN: [[TgCommand.EXIT.value]],
+    UserState.ADMIN: [
+        [TgCommand.ADMIN_NOTIFY_ON.value],
+        [TgCommand.ADMIN_NOTIFY_OFF.value],
+        [TgCommand.EXIT.value],
     ],
-    userState.CHANGE_NAME: [[tgCommand.EXIT.value]],
-    userState.WAIT_FOR_GPG: [[tgCommand.EXIT.value]],
-    userState.WAIT_FOR_CORRECT_MESSAGE: [[tgCommand.EXIT.value]],
+    UserState.CHANGE_NAME: [[TgCommand.EXIT.value]],
+    UserState.WAIT_FOR_GPG: [[TgCommand.EXIT.value]],
+    UserState.WAIT_FOR_CORRECT_MESSAGE: [[TgCommand.EXIT.value]],
 }
 
 

@@ -9,7 +9,7 @@ def gen_some_text():
     return "PUPU"
 
 
-def deleteGPG(id):
+def delete_gpg(id):
     path = Path(currLoc + f"{id}.fp")
     if path.exists():
         with path.open("r") as file:
@@ -21,8 +21,8 @@ def deleteGPG(id):
         path.unlink()
 
 
-def addGPG(id, message):
-    deleteGPG(id)
+def add_gpg(id, message):
+    delete_gpg(id)
     try:
         import_k = gpg.import_keys(message)
     except Exception:
@@ -36,16 +36,16 @@ def addGPG(id, message):
     return False
 
 
-def getMessage(id):
+def get_message(id):
     with open(currLoc + f"{id}.fp", "r") as file:
         fp = file.read().strip()
     with open(currLoc + f"{id}.txt", "rb") as file:
         encrypted = gpg.encrypt_file(file, fp, always_trust=True)
     if not encrypted.ok:
-        print("Ошибка шифрования:", encrypted.stderr)
+        print("Encypted Error:", encrypted.stderr)
     return str(encrypted)
 
 
-def getDecMessage(id):
+def get_dec_message(id):
     with open(currLoc + f"{id}.txt", "r") as file:
         return file.read()

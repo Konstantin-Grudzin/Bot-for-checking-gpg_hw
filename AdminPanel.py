@@ -3,38 +3,42 @@ import TgHandler
 dataJson = None
 
 
-def SetData(obj):
+def set_data(obj):
     global dataJson
     dataJson = obj
 
 
-def Notify():
+def notify():
     if len(dataJson["Admins"]) == 0 or len(dataJson["Good Students"]) == 0:
         return
     admins = dataJson["Admins"]
     stud = dataJson["Good Students"][-1]
+
+    all_sleep=True
     for [admin, allow] in admins.items():
         if not allow:
             continue
-        TgHandler.sendText(admin, f"{stud} pass the test,hooray!")
-    dataJson["Good Students"].pop()
+        all_sleep = False
+        TgHandler.send_text(admin, f"{stud} pass the test,hooray!")
+    if(not all_sleep):
+        dataJson["Good Students"].pop()
 
 
-def AddGoodStudent(username):
+def add_good_student(username):
     dataJson["Good Students"].append(username)
 
 
-def AddAdmin(id):
-    dataJson["Admins"][str(id)] = True
+def add_admin(id):
+    dataJson["Admins"][str(id)] = False
 
 
-def DelAdmin(id):
+def del_admin(id):
     del dataJson["Admins"][str(id)]
 
 
-def OnNotify(id):
+def on_notify(id):
     dataJson["Admins"][str(id)] = True
 
 
-def OffNotify(id):
+def off_notify(id):
     dataJson["Admins"][str(id)] = False

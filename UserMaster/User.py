@@ -2,10 +2,10 @@ import GPGHandler
 import JsonHelper
 import TgHandler
 from UserMaster.UserHelper import (
-    userState,
+    UserState,
     menuText,
     menuButtons,
-    tgCommand,
+    TgCommand,
     gen_start_text,
     success_name_changing,
     wrong_command,
@@ -19,123 +19,123 @@ from UserMaster.UserHelper import (
     admin_notify_off,
 )
 import AdminPanel
-from secret_info.CanPass import canPass
+from secret_info.CanPass import can_pass
 
 
 class User:
     def __init__(self, data):
         self.id = data["id"]
-        self.state = userState(data["state"])
+        self.state = UserState(data["state"])
         self.username = data["username"]
         self.result = data["result"]
 
-    def changeState(self, state):
+    def change_state(self, state):
         print(state)
         self.state = state
-        JsonHelper.changeState(self.id, state)
-        TgHandler.sendText(self.id, menuText[state], menuButtons[state])
+        JsonHelper.change_state(self.id, state)
+        TgHandler.send_text(self.id, menuText[state], menuButtons[state])
 
-    def stateHandler(self, message):
+    def state_handler(self, message):
         match self.state:
-            case userState.BEGIN:
-                return self.BeginHandler(message)
-            case userState.CHANGE_NAME:
-                return self.ChangeNameHandler(message)
-            case userState.ENTER_ADMIN:
-                return self.EnterAdminHandler(message)
-            case userState.ADMIN:
-                return self.AdminHandler(message)
-            case userState.WAIT_FOR_GPG:
-                return self.WaitForGPGHandler(message)
-            case userState.WAIT_FOR_CORRECT_MESSAGE:
-                return self.WaitForCorrectMessage(message)
+            case UserState.BEGIN:
+                return self.begin_handler(message)
+            case UserState.CHANGE_NAME:
+                return self.change_name_handler(message)
+            case UserState.ENTER_ADMIN:
+                return self.enter_admin_handler(message)
+            case UserState.ADMIN:
+                return self.admin_handler(message)
+            case UserState.WAIT_FOR_GPG:
+                return self.wait_for_gpg_handler(message)
+            case UserState.WAIT_FOR_CORRECT_MESSAGE:
+                return self.wait_for_correct_message(message)
             case _:
-                return self.BeginHandler(message)
+                return self.begin_handler(message)
 
     # ======================================HANDLERS======================================
-    def BeginHandler(self, message):
+    def begin_handler(self, message):
         match message:
-            case tgCommand.START.value:
-                TgHandler.sendText(self.id, gen_start_text(self))
-                return userState.BEGIN
-            case tgCommand.CHANGE_NAME.value:
-                return userState.CHANGE_NAME
-            case tgCommand.BECOME_ADMIN.value:
-                return self.EnterAdminHandler(self.id)
-            case tgCommand.BEGIN_EXAM.value:
-                return userState.WAIT_FOR_GPG
+            case TgCommand.START.value:
+                TgHandler.send_text(self.id, gen_start_text(self))
+                return UserState.BEGIN
+            case TgCommand.CHANGE_NAME.value:
+                return UserState.CHANGE_NAME
+            case TgCommand.BECOME_ADMIN.value:
+                return self.enter_admin_handler(self.id)
+            case TgCommand.BEGIN_EXAM.value:
+                return UserState.WAIT_FOR_GPG
             case _:
-                TgHandler.sendText(self.id, wrong_command)
-                return userState.BEGIN
+                TgHandler.send_text(self.id, wrong_command)
+                return UserState.BEGIN
 
-    def ChangeNameHandler(self, message):
+    def change_name_handler(self, message):
         match message:
-            case tgCommand.EXIT.value:
+            case TgCommand.EXIT.value:
                 pass
             case _:
                 self.username = message
                 try:
-                    JsonHelper.changeName(self.id, message)
+                    JsonHelper.change_name(self.id, message)
                 except Exception:
-                    TgHandler.sendText(self.id, "Sorry Something Went Wrong")
-                    return userState.BEGIN
-                TgHandler.sendText(self.id, success_name_changing(self))
-        return userState.BEGIN
+                    TgHandler.send_text(self.id, "Sorry Something Went Wrong")
+                    return UserState.BEGIN
+                TgHandler.send_text(self.id, success_name_changing(self))
+        return UserState.BEGIN
 
-    def EnterAdminHandler(self, id):
-        if canPass(id):
-            AdminPanel.AddAdmin(self.id)
-            TgHandler.sendText(self.id, "Приветствую, Милорд")
-            return userState.ADMIN
+    def enter_admin_handler(self, id):
+        if can_pass(id):
+            AdminPanel.add_admin(self.id)
+            TgHandler.send_text(self.id, "Приветствую, Милорд")
+            return UserState.ADMIN
         else:
-            TgHandler.sendText(self.id, wrong_admin_data)
-            return userState.BEGIN
+            TgHandler.send_text(self.id, wrong_admin_data)
+            return UserState.BEGIN
 
-    def AdminHandler(self, message):
+    def admin_handler(self, message):
         match message:
-            case tgCommand.EXIT.value:
-                AdminPanel.DelAdmin(self.id)
-                return userState.BEGIN
-            case tgCommand.ADMIN_NOTIFY_ON.value:
-                TgHandler.sendText(self.id, admin_notify_on)
-                AdminPanel.OnNotify(self.id)
-                return userState.ADMIN
-            case tgCommand.ADMIN_NOTIFY_OFF.value:
-                TgHandler.sendText(self.id, admin_notify_off)
-                AdminPanel.OffNotify(self.id)
-                return userState.ADMIN
+            case TgCommand.EXIT.value:
+                AdminPanel.del_admin(self.id)
+                return UserState.BEGIN
+            case TgCommand.ADMIN_NOTIFY_ON.value:
+                TgHandler.send_text(self.id, admin_notify_on)
+                AdminPanel.on_notify(self.id)
+                return UserState.ADMIN
+            case TgCommand.ADMIN_NOTIFY_OFF.value:
+                TgHandler.send_text(self.id, admin_notify_off)
+                AdminPanel.off_notify(self.id)
+                return UserState.ADMIN
             case _:
-                TgHandler.sendText(self.id, wrong_command)
-                return userState.ADMIN
+                TgHandler.send_text(self.id, wrong_command)
+                return UserState.ADMIN
 
-    def WaitForGPGHandler(self, message):
+    def wait_for_gpg_handler(self, message):
         match message:
-            case tgCommand.EXIT.value:
-                TgHandler.sendText(self.id, your_gpg_key_delete)
-                GPGHandler.deleteGPG(self.id)
-                return userState.BEGIN
+            case TgCommand.EXIT.value:
+                TgHandler.send_text(self.id, your_gpg_key_delete)
+                GPGHandler.delete_gpg(self.id)
+                return UserState.BEGIN
             case _:
-                if GPGHandler.addGPG(self.id, message):
-                    TgHandler.sendText(self.id, your_gpg_added)
-                    TgHandler.sendGPGMessage(self.id, GPGHandler.getMessage(self.id))
-                    return userState.WAIT_FOR_CORRECT_MESSAGE
-                TgHandler.sendText(self.id, incorrect_gpg)
-                return userState.WAIT_FOR_GPG
+                if GPGHandler.add_gpg(self.id, message):
+                    TgHandler.send_text(self.id, your_gpg_added)
+                    TgHandler.send_gpg_message(self.id, GPGHandler.get_message(self.id))
+                    return UserState.WAIT_FOR_CORRECT_MESSAGE
+                TgHandler.send_text(self.id, incorrect_gpg)
+                return UserState.WAIT_FOR_GPG
 
-    def WaitForCorrectMessage(self, message):
+    def wait_for_correct_message(self, message):
         match message:
-            case tgCommand.EXIT.value:
-                TgHandler.sendText(self.id, your_gpg_key_delete)
-                GPGHandler.deleteGPG(self.id)
-                return userState.BEGIN
+            case TgCommand.EXIT.value:
+                TgHandler.send_text(self.id, your_gpg_key_delete)
+                GPGHandler.delete_gpg(self.id)
+                return UserState.BEGIN
             case _:
-                if GPGHandler.getDecMessage(self.id) == message:
-                    TgHandler.sendText(self.id, you_are_correct)
+                if GPGHandler.get_dec_message(self.id) == message:
+                    TgHandler.send_text(self.id, you_are_correct)
                     if not self.result:
-                        AdminPanel.AddGoodStudent(self.username)
+                        AdminPanel.add_good_student(self.username)
                         self.result = True
-                        JsonHelper.changeResult(self.id)
-                    GPGHandler.deleteGPG(self.id)
-                    return userState.BEGIN
-                TgHandler.sendText(self.id, incorrect_message)
-                return userState.WAIT_FOR_CORRECT_MESSAGE
+                        JsonHelper.change_result(self.id)
+                    GPGHandler.delete_gpg(self.id)
+                    return UserState.BEGIN
+                TgHandler.send_text(self.id, incorrect_message)
+                return UserState.WAIT_FOR_CORRECT_MESSAGE

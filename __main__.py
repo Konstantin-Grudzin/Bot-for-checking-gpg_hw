@@ -3,7 +3,7 @@ import json
 import AdminPanel
 import JsonHelper
 import TgHandler
-from UserMaster.UserMaster import ProcessMessage
+from UserMaster.UserMaster import process_message
 
 path = Path(__file__)
 dataLoc = str(path.parent) + ("/data.json")
@@ -26,21 +26,21 @@ def main():
     print("===start===")
     with open(dataLoc, "r+") as file:
         dataJson = json.load(file)
-        AdminPanel.SetData(dataJson)
+        AdminPanel.set_data(dataJson)
         while True:
-            [messages, dataJson["offset"]] = TgHandler.getUpdates(dataJson["offset"])
+            [messages, dataJson["offset"]] = TgHandler.get_updates(dataJson["offset"])
             for message in messages["result"]:
                 print(message)
                 messageType = [*message.keys()][1]
                 message = message[messageType]
                 if message.get("text", None) is not None:
-                    ProcessMessage(message)
+                    process_message(message)
                 else:
                     print("I can't handle this")
 
             # TODO: Enable SIGKILL message and move this block from while
-            JsonHelper.reWriteFile(dataJson, file)
-            AdminPanel.Notify()
+            AdminPanel.notify()
+            JsonHelper.rewrite_file(dataJson, file)
             print("===HeartBeat===")
 
 

@@ -1,6 +1,6 @@
 from secret_info import adminUsers
 
 
-def canPass(id):
+def can_pass(id):
     global adminUsers
     return id in adminUsers
