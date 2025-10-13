@@ -7,7 +7,7 @@ path = Path(__file__)
 default_path = str(path.parent) + ("/user/")
 
 
-def createFile(data, loc):
+def create_file(data, loc):
     with open(loc, "w") as file:
         txt = json.dumps(data, indent=4)
         file.write(txt)

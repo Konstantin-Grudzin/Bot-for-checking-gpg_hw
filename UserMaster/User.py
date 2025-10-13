@@ -3,8 +3,8 @@ import JsonHelper
 import TgHandler
 from UserMaster.UserHelper import (
     UserState,
-    menuText,
-    menuButtons,
+    menu_text,
+    menu_buttons,
     TgCommand,
     gen_start_text,
     success_name_changing,
@@ -33,7 +33,7 @@ class User:
         print(state)
         self.state = state
         JsonHelper.change_state(self.id, state)
-        TgHandler.send_text(self.id, menuText[state], menuButtons[state])
+        TgHandler.send_text(self.id, menu_text[state], menu_buttons[state])
 
     def state_handler(self, message):
         match self.state:

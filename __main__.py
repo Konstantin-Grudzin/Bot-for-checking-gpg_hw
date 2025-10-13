@@ -13,7 +13,7 @@ def init():
     # create data.json
     if not Path(dataLoc).exists():
         data = {"offset": 0, "Admins": {}, "Good Students": []}
-        JsonHelper.createFile(data, dataLoc)
+        JsonHelper.create_file(data, dataLoc)
 
     # create gpg_keys
     Path(str(path.parent) + ("/gpg_keys")).mkdir(exist_ok=True)

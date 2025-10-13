@@ -3,13 +3,13 @@ from UserMaster.User import User
 from UserMaster.UserHelper import UserState, TgCommand
 
 
-def getUser(id, username):
+def get_user(id, username):
     if JsonHelper.user_exist(id):
         return User(data=JsonHelper.get_user_json(id))
-    return createUser(id, username)
+    return create_user(id, username)
 
 
-def createUser(id, username):
+def create_user(id, username):
     data = {
         "id": id,
         "state": UserState.BEGIN.value,
@@ -29,7 +29,7 @@ def process_message(msg):
     message = msg["text"]
 
     # this needs to avoid handling start message from all states
-    user = getUser(id, username)
+    user = get_user(id, username)
     if user.state != UserState.BEGIN and message == TgCommand.START.value:
         user.state = UserState.BEGIN
 

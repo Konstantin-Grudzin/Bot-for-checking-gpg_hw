@@ -20,7 +20,7 @@ class TgCommand(Enum):
     EXIT = "Выход"
 
 
-menuText = {
+menu_text = {
     UserState.BEGIN: "Добро пожаловать на начальную страницу: тут ты можешь:\n1.Сдать зачёт\n2.Изменить имя, под которым уведомление о зачёте будет отправлено преподавателю (Изначально берётся из имени в тг)\n3.Войти в админ-панель",
     UserState.ENTER_ADMIN: "Введи пасс-ключ для входа в админ панель",
     UserState.ADMIN: "",
@@ -29,7 +29,7 @@ menuText = {
     UserState.WAIT_FOR_CORRECT_MESSAGE: "Я зашифровал сообщение, скопируй его, расшифруй и отправь мне\nПодсказка:\nВоспользуйся командой\n<code>gpg -d -o message.txt 'имя файла с этим сообщением'</code>",
 }
 
-menuButtons = {
+menu_buttons = {
     UserState.BEGIN: [
         [TgCommand.BEGIN_EXAM.value, TgCommand.CHANGE_NAME.value],
         [TgCommand.BECOME_ADMIN.value],
