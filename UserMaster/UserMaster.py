@@ -1,4 +1,6 @@
 import JsonHelper
+import TgHandler
+from UserMaster import UserHelper
 from UserMaster.User import User
 from UserMaster.UserHelper import UserState, TgCommand
 
@@ -30,7 +32,24 @@ def process_message(msg):
 
     # this needs to avoid handling start message from all states
     user = get_user(id, username)
-    if user.state != UserState.BEGIN and message == TgCommand.START.value:
+    if message == TgCommand.START.value:
         user.state = UserState.BEGIN
 
     user.change_state(user.state_handler(message))
+
+
+def process_file(msg):
+    id = msg["from"]["id"]
+    username = msg["from"]["first_name"]
+    if msg["from"].get("last_name", None) is not None:
+        username += " " + msg["from"]["last_name"]
+    file_id = msg["document"]["file_id"]
+
+    text = TgHandler.get_file(file_id)
+
+    # this needs to avoid handling start message from all states
+    user = get_user(id, username)
+    if user.state != UserState.WAIT_FOR_GPG:
+        TgHandler.send_text(user.id, UserHelper.wrong_command)
+        return
+    user.change_state(user.state_handler(text))

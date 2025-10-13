@@ -1,6 +1,14 @@
 import json
 import requests
-from secret_info import address
+from secret_info import address, download_adress
+
+
+def get_file(file_id):
+    resp = requests.get(address + "getFile", params={"file_id": file_id})
+    resp = resp.json()
+    path = resp["result"]["file_path"]
+    resp = requests.get(download_adress + "/" + path)
+    return resp.content
 
 
 def get_updates(offset: int):

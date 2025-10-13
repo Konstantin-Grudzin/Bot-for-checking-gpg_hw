@@ -25,7 +25,7 @@ menu_text = {
     UserState.ENTER_ADMIN: "Введи пасс-ключ для входа в админ панель",
     UserState.ADMIN: "",
     UserState.CHANGE_NAME: "Напиши новое ФИ и группу через пробел (Учти, его нельзя изменить после и во время получения зачёта!):\n",
-    UserState.WAIT_FOR_GPG: "Жду твой gpg-ключ\nПодсказка: получить его можно с помощью этих комманд:\n<code>gpg --full-gen-key</code>\n<code>gpg --export -a bob@example.com > bob_public.gpg</code>",
+    UserState.WAIT_FOR_GPG: "Жду твой gpg-ключ\nПодсказка: получить его можно с помощью этих комманд:\n<code>gpg --full-gen-key</code>\n<code>gpg --export -a bob@example.com > bob_public.gpg</code>\nМожешь пислать его ввиде текста, или же файлом",
     UserState.WAIT_FOR_CORRECT_MESSAGE: "Я зашифровал сообщение, скопируй его, расшифруй и отправь мне\nПодсказка:\nВоспользуйся командой\n<code>gpg -d -o message.txt 'имя файла с этим сообщением'</code>",
 }
 

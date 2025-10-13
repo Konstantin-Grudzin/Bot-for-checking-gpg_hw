@@ -3,7 +3,7 @@ import json
 import AdminPanel
 import JsonHelper
 import TgHandler
-from UserMaster.UserMaster import process_message
+from UserMaster.UserMaster import process_message, process_file
 
 path = Path(__file__)
 dataLoc = str(path.parent) + ("/data.json")
@@ -35,6 +35,8 @@ def main():
                 message = message[messageType]
                 if message.get("text", None) is not None:
                     process_message(message)
+                elif message.get("document", None) is not None:
+                    process_file(message)
                 else:
                     print("I can't handle this")
 

@@ -53,6 +53,14 @@ class User:
                 return self.begin_handler(message)
 
     # ======================================HANDLERS======================================
+    def handle_gpg_key(self, message):
+        if GPGHandler.add_gpg(self.id, message):
+            TgHandler.send_text(self.id, your_gpg_added)
+            TgHandler.send_gpg_message(self.id, GPGHandler.get_message(self.id))
+            return UserState.WAIT_FOR_CORRECT_MESSAGE
+        TgHandler.send_text(self.id, incorrect_gpg)
+        return UserState.WAIT_FOR_GPG
+
     def begin_handler(self, message):
         match message:
             case TgCommand.START.value:
@@ -115,12 +123,7 @@ class User:
                 GPGHandler.delete_gpg(self.id)
                 return UserState.BEGIN
             case _:
-                if GPGHandler.add_gpg(self.id, message):
-                    TgHandler.send_text(self.id, your_gpg_added)
-                    TgHandler.send_gpg_message(self.id, GPGHandler.get_message(self.id))
-                    return UserState.WAIT_FOR_CORRECT_MESSAGE
-                TgHandler.send_text(self.id, incorrect_gpg)
-                return UserState.WAIT_FOR_GPG
+                return self.handle_gpg_key(message)
 
     def wait_for_correct_message(self, message):
         match message:
