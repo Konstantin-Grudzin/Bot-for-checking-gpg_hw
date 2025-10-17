@@ -10,5 +10,8 @@ class SqlHandler(Handler):
 
     def handle(self, message: dict) -> bool:
         sql = SQL()
-        sql.insert_message(message_parser.get_id(message), json.dumps(message, indent = 2, ensure_ascii=False))
+        sql.insert_message(
+            message_parser.get_id(message),
+            json.dumps(message, indent=2, ensure_ascii=False),
+        )
         return True

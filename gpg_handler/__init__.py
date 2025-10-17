@@ -11,8 +11,10 @@ gpg = gnupg.GPG(gnupghome="gpg")
 
 currLoc = [*Path(__file__).parents][1] / "user_text"
 
+
 def gen_some_text():
     return fake.name()
+
 
 def parse_uid(uid: str):
     """
@@ -30,13 +32,14 @@ def parse_uid(uid: str):
 
     # вырежем <email> и (comment)
     # оставим только имя (trim)
-    name = re.sub(r"<.*?>", "", uid)         # удалить email
-    name = re.sub(r"\(.*?\)", "", name)      # удалить комментарий
+    name = re.sub(r"<.*?>", "", uid)  # удалить email
+    name = re.sub(r"\(.*?\)", "", name)  # удалить комментарий
     name = name.strip()
     if not name:
         name = None
 
     return name, comment
+
 
 def get_key_info_by_fingerprint(fingerprint: str):
     """
@@ -69,11 +72,18 @@ def get_key_info_by_fingerprint(fingerprint: str):
                 key_fp_list = [str(x).lower() for x in key_fpr]
                 matches = fpr_lower in key_fp_list
             else:
-                matches = (str(key_fpr).lower() == fpr_lower)
+                matches = str(key_fpr).lower() == fpr_lower
 
             if matches:
-                algo = key.get("algo") or key.get("key_type") or key.get("keytype") or key.get("type")
-                length_raw = key.get("length") or key.get("keylength") or key.get("key_size")
+                algo = (
+                    key.get("algo")
+                    or key.get("key_type")
+                    or key.get("keytype")
+                    or key.get("type")
+                )
+                length_raw = (
+                    key.get("length") or key.get("keylength") or key.get("key_size")
+                )
                 try:
                     length = int(length_raw) if length_raw is not None else None
                 except (ValueError, TypeError):
@@ -97,6 +107,7 @@ def get_key_info_by_fingerprint(fingerprint: str):
 
     return None
 
+
 def delete_gpg(id):
     sql = SQL()
     fp = sql.get_fingerprint(id)
@@ -105,21 +116,22 @@ def delete_gpg(id):
     if path.exists():
         path.unlink()
 
+
 def add_gpg(id, message):
     sql = SQL()
     try:
         import_k = gpg.import_keys(message)
     except Exception:
         return "You key is corrupted!"
-    
-    #TODO add error keys and say's thats wrong?
+
+    # TODO add error keys and say's thats wrong?
     key = get_key_info_by_fingerprint(import_k.fingerprints[0])
-    if(key["algo"] != 1):
-        print("==",key["algo"])
+    if key["algo"] != 1:
+        print("==", key["algo"])
         return "Algo of your key must be RSA"
-    if(key["length"]!=4096):
+    if key["length"] != 4096:
         return "Length of your algo must be 4096"
-    if(key["is_secret"]):
+    if key["is_secret"]:
         return "Your key must be public"
     if import_k.fingerprints:
         sql.set_fingerprint(id, import_k.fingerprints[0])
@@ -128,12 +140,14 @@ def add_gpg(id, message):
         return None
     return "You key is corrupted!"
 
+
 def get_info_from_key(id):
     sql = SQL()
     fp = sql.get_fingerprint(id)
     key = get_key_info_by_fingerprint(fp)
-    print(key["name"],key["comment"])
-    return key["name"],key["comment"]
+    print(key["name"], key["comment"])
+    return key["name"], key["comment"]
+
 
 def get_message(id):
     sql = SQL()

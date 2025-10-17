@@ -8,6 +8,7 @@ from observer.dispatcher import Dispatcher
 
 path = Path(__file__)
 
+
 def init() -> None:
     path.parent.touch("data.db")
     SQL(path.parent / "data.db")
@@ -20,7 +21,7 @@ def init() -> None:
 
 def main() -> None:
     print("===start===")
-    dispatcher  =  Dispatcher()
+    dispatcher = Dispatcher()
     try:
         while True:
             for message in tg_handler.get_updates():

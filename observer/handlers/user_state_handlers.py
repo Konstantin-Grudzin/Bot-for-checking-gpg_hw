@@ -4,22 +4,37 @@ import tg_handler
 from observer.handlers.handler import Handler
 from secret_info.can_pass import can_pass
 from user import User
-from user_helper import TgCommand, UserState, check_you_info, your_gpg_key_delete, your_gpg_added, incorrect_gpg,wrong_command,you_are_correct,incorrect_message
+from user_helper import (
+    TgCommand,
+    UserState,
+    check_you_info,
+    your_gpg_key_delete,
+    your_gpg_added,
+    incorrect_gpg,
+    wrong_command,
+    you_are_correct,
+    incorrect_message,
+)
+
 
 class StartHandler(Handler):
     def can_handle(self, message: dict) -> bool:
-        return message_parser.get_text(message)=='/start'
+        return message_parser.get_text(message) == "/start"
 
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         user.change_state(UserState.BEGIN)
         return False
 
+
 class EnterAdminHandler(Handler):
 
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
-        return user.state == UserState.BEGIN and message_parser.get_text(message) == TgCommand.BECOME_ADMIN.value
+        return (
+            user.state == UserState.BEGIN
+            and message_parser.get_text(message) == TgCommand.BECOME_ADMIN.value
+        )
 
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
@@ -29,10 +44,15 @@ class EnterAdminHandler(Handler):
             user.change_state(UserState.BEGIN)
         return False
 
+
 class EnterExamHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
-        return user.state == UserState.BEGIN and message_parser.get_text(message) == TgCommand.BEGIN_EXAM.value
+        return (
+            user.state == UserState.BEGIN
+            and message_parser.get_text(message) == TgCommand.BEGIN_EXAM.value
+        )
+
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         if user.result:
@@ -41,18 +61,25 @@ class EnterExamHandler(Handler):
             user.change_state(UserState.WAIT_FOR_GPG)
         return False
 
+
 class PrintAllPassedHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
-        return user.state == UserState.ADMIN and message_parser.get_text(message) == TgCommand.PRINT_ALL_PASSED.value
+        return (
+            user.state == UserState.ADMIN
+            and message_parser.get_text(message) == TgCommand.PRINT_ALL_PASSED.value
+        )
+
     def handle(self, message: dict) -> bool:
         tg_handler.print_all_passed()
         return False
+
 
 class WaitForGPGHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         return user.state == UserState.WAIT_FOR_GPG
+
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         if message_parser.get_text(message) == TgCommand.EXIT.value:
@@ -73,10 +100,12 @@ class WaitForGPGHandler(Handler):
                 user.change_state(UserState.WAIT_FOR_GPG)
         return False
 
+
 class CheckGPGHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         return user.state == UserState.USER_CHECK_GPG
+
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         match message_parser.get_text(message):
@@ -94,10 +123,12 @@ class CheckGPGHandler(Handler):
                 tg_handler.send_text(user.id, wrong_command)
         return False
 
+
 class WaitForCorrectMessageHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         return user.state == UserState.WAIT_FOR_CORRECT_MESSAGE
+
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
         match message_parser.get_text(message):
@@ -106,7 +137,9 @@ class WaitForCorrectMessageHandler(Handler):
                 gpg_handler.delete_gpg(user.id)
                 user.change_state(UserState.BEGIN)
             case _:
-                if gpg_handler.get_dec_message(user.id) == message_parser.get_text_or_file(message):
+                if gpg_handler.get_dec_message(
+                    user.id
+                ) == message_parser.get_text_or_file(message):
                     tg_handler.send_text(user.id, you_are_correct)
                     if not user.result:
                         user.change_result()

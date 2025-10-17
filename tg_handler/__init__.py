@@ -31,8 +31,8 @@ def send_text(id, text=None, keyboard=None):
         "resize_keyboard": True,  # optional: make buttons smaller
         "one_time_keyboard": True,  # optional: keep keyboard after click
     }
-    print(type(text),type(keyboard))
-    match text,keyboard:
+    print(type(text), type(keyboard))
+    match text, keyboard:
         case None, list():
             requests.post(
                 ADRESS + "sendMessage",
@@ -57,7 +57,6 @@ def send_text(id, text=None, keyboard=None):
         case _:
             print("skip")
             pass
-        
 
 
 def send_big_text(id, text):
@@ -70,8 +69,8 @@ def send_big_text(id, text):
         },
     )
 
+
 def print_all_passed():
     sql = SQL()
     passed = sql.get_list_of_all_passed()
     send_big_text(ADMIN_TELEGRAM_ID, "\n".join(*passed))
-    

@@ -36,8 +36,9 @@ menu_buttons = {
     UserState.ADMIN: [
         [TgCommand.EXIT.value],
     ],
-    UserState.USER_CHECK_GPG: [[TgCommand.OK.value,TgCommand.NO.value],
-                               [TgCommand.EXIT.value]
+    UserState.USER_CHECK_GPG: [
+        [TgCommand.OK.value, TgCommand.NO.value],
+        [TgCommand.EXIT.value],
     ],
     UserState.WAIT_FOR_GPG: [[TgCommand.EXIT.value]],
     UserState.WAIT_FOR_CORRECT_MESSAGE: [[TgCommand.EXIT.value]],
@@ -50,6 +51,7 @@ def gen_start_text(user):
 
 def success_name_changing(user):
     return f"Имя изменено!\nТеперь ты {user.username}"
+
 
 def check_you_info(user):
     return f"Имя:{user.name}\nГруппа:{user.group}\nПроверь внимательно, потом изменить это будет нельзя!"
