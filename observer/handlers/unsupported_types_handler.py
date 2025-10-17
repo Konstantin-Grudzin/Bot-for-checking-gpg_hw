@@ -1,4 +1,3 @@
-
 import message_parser
 import tg_handler
 from observer.handlers.handler import Handler

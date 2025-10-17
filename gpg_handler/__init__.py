@@ -11,6 +11,8 @@ gpg = gnupg.GPG(gnupghome="gpg")
 
 currLoc = [*Path(__file__).parents][1] / "user_text"
 
+FIO_REGEX = re.compile(r"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$")
+
 
 def gen_some_text():
     return fake.name()
@@ -99,8 +101,8 @@ def get_key_info_by_fingerprint(fingerprint: str):
                     "fingerprint": fingerprint,
                     "algo": int(algo),
                     "length": length,
-                    "name": name if name is not None else "",
-                    "comment": comment if comment is not None else "",
+                    "name": name,
+                    "comment": comment,
                     "uids": uids,
                     "is_secret": bool(is_secret),
                 }
@@ -117,6 +119,13 @@ def delete_gpg(id):
         path.unlink()
 
 
+def check_format(fio):
+    if not isinstance(fio, str):
+        return False
+    fio = fio.strip()
+    return bool(FIO_REGEX.fullmatch(fio))
+
+
 def add_gpg(id, message):
     sql = SQL()
     try:
@@ -127,12 +136,15 @@ def add_gpg(id, message):
     # TODO add error keys and say's thats wrong?
     key = get_key_info_by_fingerprint(import_k.fingerprints[0])
     if key["algo"] != 1:
-        print("==", key["algo"])
-        return "Algo of your key must be RSA"
+        return "Algo of your key must be RSA(1)"
     if key["length"] != 4096:
         return "Length of your algo must be 4096"
     if key["is_secret"]:
         return "Your key must be public"
+    if key["name"] is None or check_format(key["name"]):
+        return "Wrong format of name"
+    if key["comment"] is None:
+        return "Comment connot be empty"
     if import_k.fingerprints:
         sql.set_fingerprint(id, import_k.fingerprints[0])
         with open(currLoc / f"{id}.txt", "w") as file:

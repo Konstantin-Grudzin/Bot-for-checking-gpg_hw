@@ -1,5 +1,6 @@
 import tg_handler
 
+
 def get_file_id(x):
     return x.get("document", {}).get("file_id", None)
 
