@@ -99,8 +99,8 @@ def get_key_info_by_fingerprint(fingerprint: str):
                     "fingerprint": fingerprint,
                     "algo": int(algo),
                     "length": length,
-                    "name": name,
-                    "comment": comment,
+                    "name": name if name is not None else "",
+                    "comment": comment if comment is not None else "",
                     "uids": uids,
                     "is_secret": bool(is_secret),
                 }
