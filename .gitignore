@@ -1,13 +1,14 @@
 #My stuff
-user/
-gpg_keys/
+gpg/
 include/
 pyvenv.cfg
 .venv/
 bin/
 lib64
-data.json
-*very_secret_info.py
+*.json
+.idea
+*.db
+user_text
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

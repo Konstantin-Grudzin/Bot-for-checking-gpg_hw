@@ -3,3 +3,4 @@ requests
 black
 ruff
 Faker
+python-dotenv
