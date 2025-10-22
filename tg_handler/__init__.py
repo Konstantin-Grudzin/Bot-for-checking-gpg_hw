@@ -73,4 +73,4 @@ def send_big_text(id, text):
 def print_all_passed():
     sql = SQL()
     passed = sql.get_list_of_all_passed()
-    send_big_text(ADMIN_TELEGRAM_ID, "\n".join(*passed))
+    send_big_text(ADMIN_TELEGRAM_ID, "\n".join(passed))

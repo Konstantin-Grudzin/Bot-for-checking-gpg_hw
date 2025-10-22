@@ -4,7 +4,7 @@ from observer.handlers.user_state_handlers import (
     StartHandler,
     EnterAdminHandler,
     EnterExamHandler,
-    PrintAllPassedHandler,
+    AdminHandler,
     WaitForGPGHandler,
     CheckGPGHandler,
     WaitForCorrectMessageHandler,
@@ -24,10 +24,10 @@ class Dispatcher:
         StartHandler(),
         EnterAdminHandler(),
         EnterExamHandler(),
-        PrintAllPassedHandler(),
         WaitForGPGHandler(),
         CheckGPGHandler(),
         WaitForCorrectMessageHandler(),
+        AdminHandler(),
         WrongCommandHandler(),
     ]
 

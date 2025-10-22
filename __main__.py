@@ -27,7 +27,7 @@ def main() -> None:
             for message in tg_handler.get_updates():
                 print(message)
                 dispatcher(message)
-                admin_panel.notify()
+            admin_panel.notify()
             print("===HeartBeat===")
             time.sleep(0.5)
     except KeyboardInterrupt:

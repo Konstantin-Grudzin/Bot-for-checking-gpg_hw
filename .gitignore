@@ -1,5 +1,5 @@
 #My stuff
-gpg/
+gpg/?*
 include/
 pyvenv.cfg
 .venv/

@@ -34,6 +34,7 @@ menu_buttons = {
         [TgCommand.BECOME_ADMIN.value],
     ],
     UserState.ADMIN: [
+        [TgCommand.PRINT_ALL_PASSED.value],
         [TgCommand.EXIT.value],
     ],
     UserState.USER_CHECK_GPG: [

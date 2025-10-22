@@ -7,7 +7,8 @@ from faker import Faker
 from sql_helper import SQL
 
 fake = Faker()
-gpg = gnupg.GPG(gnupghome="gpg")
+gpg = gnupg.GPG(gnupghome=[*Path(__file__).parents][1] / "gpg")
+gpg.encoding = 'utf-8'
 
 currLoc = [*Path(__file__).parents][1] / "user_text"
 

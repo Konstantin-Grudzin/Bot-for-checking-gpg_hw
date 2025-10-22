@@ -62,16 +62,21 @@ class EnterExamHandler(Handler):
         return False
 
 
-class PrintAllPassedHandler(Handler):
+class AdminHandler(Handler):
     def can_handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
-        return (
-            user.state == UserState.ADMIN
-            and message_parser.get_text(message) == TgCommand.PRINT_ALL_PASSED.value
-        )
+        return user.state == UserState.ADMIN
 
     def handle(self, message: dict) -> bool:
-        tg_handler.print_all_passed()
+        match message_parser.get_text(message):
+            case TgCommand.PRINT_ALL_PASSED.value:
+                tg_handler.print_all_passed()
+            case TgCommand.EXIT.value:
+                user = User(message_parser.get_id(message))
+                user.change_state(UserState.BEGIN)
+            case _:
+                return True
+        
         return False
 
 
