@@ -23,21 +23,6 @@ class StartHandler(Handler):
 
     def handle(self, message: dict) -> bool:
         user: User = User(message_parser.get_id(message))
-        user.change_state(UserState.BEGIN)
-        return False
-
-
-class EnterAdminHandler(Handler):
-
-    def can_handle(self, message: dict) -> bool:
-        user: User = User(message_parser.get_id(message))
-        return (
-            user.state == UserState.BEGIN
-            and message_parser.get_text(message) == TgCommand.BECOME_ADMIN.value
-        )
-
-    def handle(self, message: dict) -> bool:
-        user: User = User(message_parser.get_id(message))
         if can_pass(user.id):
             user.change_state(UserState.ADMIN)
         else:
@@ -76,7 +61,7 @@ class AdminHandler(Handler):
                 user.change_state(UserState.BEGIN)
             case _:
                 return True
-        
+
         return False
 
 

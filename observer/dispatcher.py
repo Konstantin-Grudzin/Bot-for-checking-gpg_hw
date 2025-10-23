@@ -2,7 +2,6 @@ from observer.handlers.sql_handler import SqlHandler
 from observer.handlers.unsupported_types_handler import UnsupportedTypesHandler
 from observer.handlers.user_state_handlers import (
     StartHandler,
-    EnterAdminHandler,
     EnterExamHandler,
     AdminHandler,
     WaitForGPGHandler,
@@ -22,7 +21,6 @@ class Dispatcher:
         UnsupportedTypesHandler(),
         SqlHandler(),
         StartHandler(),
-        EnterAdminHandler(),
         EnterExamHandler(),
         WaitForGPGHandler(),
         CheckGPGHandler(),

@@ -8,9 +8,7 @@ from sql_helper import SQL
 
 fake = Faker()
 gpg = gnupg.GPG(gnupghome=[*Path(__file__).parents][1] / "gpg")
-gpg.encoding = 'utf-8'
-
-currLoc = [*Path(__file__).parents][1] / "user_text"
+gpg.encoding = "utf-8"
 
 FIO_REGEX = re.compile(r"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.[А-ЯЁ]\.$")
 
@@ -115,9 +113,6 @@ def delete_gpg(id):
     sql = SQL()
     fp = sql.get_fingerprint(id)
     gpg.delete_keys(fp)
-    path = Path(currLoc / f"{id}.txt")
-    if path.exists():
-        path.unlink()
 
 
 def check_format(fio):
@@ -135,7 +130,10 @@ def add_gpg(id, message):
         return "You key is corrupted!"
 
     # TODO add error keys and say's thats wrong?
-    key = get_key_info_by_fingerprint(import_k.fingerprints[0])
+    try:
+        key = get_key_info_by_fingerprint(import_k.fingerprints[0])
+    except Exception:
+        return "You key is corrupted!"
     if key["algo"] != 1:
         return "Algo of your key must be RSA(1)"
     if key["length"] != 4096:
@@ -148,8 +146,7 @@ def add_gpg(id, message):
         return "Comment connot be empty"
     if import_k.fingerprints:
         sql.set_fingerprint(id, import_k.fingerprints[0])
-        with open(currLoc / f"{id}.txt", "w") as file:
-            file.write(gen_some_text())
+        sql.set_secret_text(id, fake.name())
         return None
     return "You key is corrupted!"
 
@@ -165,13 +162,13 @@ def get_info_from_key(id):
 def get_message(id):
     sql = SQL()
     fp = sql.get_fingerprint(id)
-    with open(currLoc / f"{id}.txt", "rb") as file:
-        encrypted = gpg.encrypt_file(file, fp, always_trust=True)
+    text = sql.get_secret_text(id)
+    encrypted = gpg.encrypt(text, fp, always_trust=True)
     if not encrypted.ok:
         print("Encypted Error:", encrypted.stderr)
     return str(encrypted)
 
 
 def get_dec_message(id):
-    with open(currLoc / f"{id}.txt", "r") as file:
-        return file.read()
+    sql = SQL()
+    return sql.get_secret_text(id)

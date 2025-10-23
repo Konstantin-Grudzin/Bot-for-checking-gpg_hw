@@ -31,11 +31,9 @@ menu_text = {
 menu_buttons = {
     UserState.BEGIN: [
         [TgCommand.BEGIN_EXAM.value],
-        [TgCommand.BECOME_ADMIN.value],
     ],
     UserState.ADMIN: [
         [TgCommand.PRINT_ALL_PASSED.value],
-        [TgCommand.EXIT.value],
     ],
     UserState.USER_CHECK_GPG: [
         [TgCommand.OK.value, TgCommand.NO.value],
@@ -44,14 +42,6 @@ menu_buttons = {
     UserState.WAIT_FOR_GPG: [[TgCommand.EXIT.value]],
     UserState.WAIT_FOR_CORRECT_MESSAGE: [[TgCommand.EXIT.value]],
 }
-
-
-def gen_start_text(user):
-    return f"Привет, добро пожаловать в автоматический зачётник по gpg!\nТвоё имя сейчас:{user.username}\nБот сделан @groks27"
-
-
-def success_name_changing(user):
-    return f"Имя изменено!\nТеперь ты {user.username}"
 
 
 def check_you_info(user):
