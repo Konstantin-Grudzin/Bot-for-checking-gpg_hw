@@ -10,7 +10,7 @@ This bot get some functions
 1. Clone repo
 2. make a new venv
 3. Install dependencies from `requirements.txt`
-4. In `secret_info` create `.env` file and fill it with bot token and admin id (see `example.env` in source dir)
+4. In `secret_info` create `.env` file and fill it with bot token and admin id (see `example.env` in source `secret_info` dir)
 5. go to source dir and use command `python3 .`
 6. ???
 7. Profit!
